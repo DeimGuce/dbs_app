@@ -23,7 +23,7 @@ if (isset($_POST['register'])){
     text: 'You have successfully registered as an admin.',
     confirmButtonText: 'OK'
     }).then(() =>{
-      window.location.href = 'login.html';
+      window.location.href = 'login.php';
     });
     </script>";
   }else{

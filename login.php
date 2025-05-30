@@ -1,3 +1,50 @@
+<?php
+
+session_start();
+
+require_once('./classes/database.php');
+
+$sweetAlertConfig = "";
+$con = new database();
+
+if(isset($_SESSION['admin_id'])){
+    header('location: index.php');
+    exit();
+}
+
+if (isset($_POST['login'])){
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $user = $con->loginUser($username, $password);
+
+    if ($user){
+        $_SESSION['admin_id'] = $user['admin_id'];
+        $_SESSION['admin_FN'] = $user['admin_FN'];
+
+        $sweetAlertConfig = "<script>
+        Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'Welcome, " . addslashes(htmlspecialchars($user['admin_FN'])) . "!',
+        confirmButtonText: 'Continue'
+        }).then(() =>{
+        window.location.href = 'index.php';
+        });
+        </script>";
+    }else{
+        $sweetAlertConfig = "<script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: 'Invalid username or password.'
+        });
+        </script>";
+    }
+
+
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,5 +72,6 @@
 
   <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
   <script src="./package/dist/sweetalert2.js"></script>
+   <?php echo $sweetAlertConfig; ?>
 </body>
 </html>
